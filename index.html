@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFC 2009 Boys - Super Bowl Fundraiser</title>
+    <style>
+        :root { --pfc-green: #00843D; --sb-lx: linear-gradient(135deg, #FF007F, #702963, #0077B6, #ffd700); }
+        body { font-family: -apple-system, sans-serif; text-align: center; background: #f4f7f4; margin: 0; padding: 10px 10px 120px 10px; }
+        .container { max-width: 950px; margin: auto; background: white; padding: 20px; border-radius: 20px; border-top: 10px solid var(--pfc-green); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        /* Progress Bar */
+        .progress-container { width: 100%; background-color: #e0e0e0; border-radius: 10px; margin: 20px 0; height: 25px; position: relative; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: var(--pfc-green); width: 0%; transition: width 1s ease-in-out; }
+        .progress-text { position: absolute; width: 100%; top: 0; left: 0; line-height: 25px; font-weight: bold; font-size: 12px; color: #333; }
+
+        .grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; background: #222; border: 4px solid var(--pfc-green); margin: 20px 0; }
+        .sq { aspect-ratio: 1; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; cursor: pointer; border: 1px solid #eee; overflow: hidden; }
+        .head-sq { background: var(--pfc-green); color: white; cursor: default; }
+        .num-sq { background: var(--sb-lx); color: white; font-size: 18px; cursor: default; }
+        .taken { background: #e6f4ea; color: var(--pfc-green); cursor: not-allowed; opacity: 0.8; font-size: 8px; }
+        .selected { background: #ffd700 !important; color: #000; border: 2px solid #000; transform: scale(1.05); z-index: 10; }
+        
+        .checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: white; padding: 20px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); z-index: 100; display: none; }
+        .btn-confirm { background: var(--pfc-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="color: var(--pfc-green); margin:0;">PICKERING FC</h1>
+    <div style="font-weight: bold;">2009 BOYS FUNDRAISER • $20/SQUARE</div>
+    
+    <div class="progress-container">
+        <div id="myBar" class="progress-bar"></div>
+        <div id="progressText" class="progress-text">Loading Progress...</div>
+    </div>
+
+    <div id="status" style="margin:10px; font-weight:bold; color: var(--pfc-green);">📡 Syncing Board...</div>
+    <div id="game-board" class="grid"></div>
+</div>
+
+<div id="checkout" class="checkout-bar">
+    <div>Squares: <span id="count">0</span></div>
+    <div>Total: <b id="total">$0</b></div>
+    <button class="btn-confirm" onclick="checkout()">Confirm & Save</button>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHUIWFce4Xb1HI3nW1toacZiEI4HK6nfsph5oZovGslcdhkOZMaVj_vcT8rPGrE6qd/exec";
+    let selectedSquares = [];
+    let takenSquares = {};
+
+    async function loadBoard() {
+        try {
+            const response = await fetch(SCRIPT_URL);
+            const sheetData = await response.json();
+            takenSquares = {};
+            sheetData.forEach(row => { if(row[0]) takenSquares[row[0].toString()] = row[1]; });
+            updateProgress(Object.keys(takenSquares).length);
+            document.getElementById('status').innerText = "✅ Board Live";
+        } catch (e) {
+            document.getElementById('status').innerText = "⚠️ Offline Mode";
+            updateProgress(0);
+        }
+        renderBoard();
+    }
+
+    function updateProgress(soldCount) {
+        const percent = Math.min((soldCount / 100) * 100, 100);
+        document.getElementById('myBar').style.width = percent + "%";
+        document.getElementById('progressText').innerText = soldCount + " / 100 Squares Sold";
+    }
+
+    function renderBoard() {
+        const board = document.getElementById('game-board');
+        board.innerHTML = "";
+        for (let i = 0; i < 121; i++) {
+            const d = document.createElement('div');
+            d.className = 'sq';
+            if (i === 0) { d.innerText = "AFC/NFC"; d.classList.add('head-sq'); }
+            else if (i < 11 || i % 11 === 0) { d.innerText = "?"; d.classList.add('num-sq'); }
+            else {
+                if (takenSquares[i]) { d.innerText = takenSquares[i]; d.classList.add('taken'); }
+                else {
+                    d.onclick = () => toggleSquare(i, d);
+                    if (selectedSquares.includes(i)) d.classList.add('selected');
+                }
+            }
+            board.appendChild(d);
+        }
+    }
+
+    function toggleSquare(id, el) {
+        if (selectedSquares.includes(id)) {
+            selectedSquares = selectedSquares.filter(s => s !== id);
+            el.classList.remove('selected');
+        } else {
+            selectedSquares.push(id);
+            el.classList.add('selected');
+        }
+        updateBar();
+    }
+
+    function updateBar() {
+        const bar = document.getElementById('checkout');
+        const count = selectedSquares.length;
+        document.getElementById('count').innerText = count;
+        document.getElementById('total').innerText = "$" + (count * 20);
+        bar.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    async function checkout() {
+        const name = prompt("Enter First & Last Name:");
+        const email = prompt("Enter Email Address:");
+        if (!name || !email) return;
+
+        const totalAmount = selectedSquares.length * 20;
+        if (confirm(`Confirm $${totalAmount} for ${selectedSquares.length} squares?\n\nPlease e-Transfer to PFCBOYS09@GMAIL.COM after clicking OK.`)) {
+            document.getElementById('status').innerText = "⌛ Saving... Please stay on this page.";
+            for (let id of selectedSquares) {
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    mode: 'no-cors',
+                    body: JSON.stringify({ squareId: id, name: name, email: email })
+                });
+            }
+            alert(`Success! Squares reserved. Send $${totalAmount} to PFCBOYS09@GMAIL.COM`);
+            selectedSquares = [];
+            updateBar();
+            loadBoard();
+        }
+    }
+    loadBoard();
+</script>
+</body>
+</html>
