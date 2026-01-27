@@ -3,47 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PFC 2009 Boys - Super Bowl Fundraiser</title>
+    <title>PFC 2009 Boys - Super Bowl Squares</title>
     <style>
-        :root { --pfc-green: #00843D; --sb-lx: linear-gradient(135deg, #FF007F, #702963, #0077B6, #ffd700); }
-        body { font-family: -apple-system, sans-serif; text-align: center; background: #f4f7f4; margin: 0; padding: 10px 10px 120px 10px; }
-        .container { max-width: 950px; margin: auto; background: white; padding: 20px; border-radius: 20px; border-top: 10px solid var(--pfc-green); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        :root { 
+            --pfc-green: #00843D; 
+            --pfc-dark: #005a2a;
+            --sb-gradient: linear-gradient(135deg, #FF007F, #702963, #0077B6, #ffd700);
+            --bg-light: #f8fafc;
+        }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-light); margin: 0; padding: 20px 10px 120px 10px; color: #1e293b; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
         
-        /* Progress Bar */
-        .progress-container { width: 100%; background-color: #e0e0e0; border-radius: 10px; margin: 20px 0; height: 25px; position: relative; overflow: hidden; }
-        .progress-bar { height: 100%; background-color: var(--pfc-green); width: 0%; transition: width 1s ease-in-out; }
-        .progress-text { position: absolute; width: 100%; top: 0; left: 0; line-height: 25px; font-weight: bold; font-size: 12px; color: #333; }
+        header { margin-bottom: 30px; }
+        h1 { color: var(--pfc-green); margin: 0; font-size: 2.5rem; letter-spacing: -1px; }
+        .subtitle { font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
 
-        .grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; background: #222; border: 4px solid var(--pfc-green); margin: 20px 0; }
-        .sq { aspect-ratio: 1; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; cursor: pointer; border: 1px solid #eee; overflow: hidden; }
-        .head-sq { background: var(--pfc-green); color: white; cursor: default; }
-        .num-sq { background: var(--sb-lx); color: white; font-size: 18px; cursor: default; }
-        .taken { background: #e6f4ea; color: var(--pfc-green); cursor: not-allowed; opacity: 0.8; font-size: 8px; }
-        .selected { background: #ffd700 !important; color: #000; border: 2px solid #000; transform: scale(1.05); z-index: 10; }
+        /* Modern Progress Bar */
+        .prog-wrapper { margin: 25px 0; text-align: left; }
+        .prog-label { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 8px; font-size: 14px; }
+        .progress-container { width: 100%; background: #f1f5f9; border-radius: 50px; height: 16px; overflow: hidden; border: 1px solid #e2e8f0; }
+        .progress-bar { height: 100%; background: var(--pfc-green); width: 0%; transition: width 1.5s cubic-bezier(0.1, 0, 0, 1); }
+
+        /* The Grid */
+        .grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; background: #f1f5f9; padding: 6px; border-radius: 12px; margin: 20px 0; }
+        .sq { aspect-ratio: 1; background: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; cursor: pointer; border-radius: 4px; transition: all 0.2s; border: 1px solid #e2e8f0; }
+        .sq:hover:not(.taken):not(.head-sq):not(.num-sq) { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-color: var(--pfc-green); }
         
-        .checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: white; padding: 20px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.2); z-index: 100; display: none; }
-        .btn-confirm { background: var(--pfc-green); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .head-sq { background: var(--pfc-green); color: white; cursor: default; font-size: 9px; }
+        .num-sq { background: #1e293b; color: white; cursor: default; font-size: 16px; border: none; }
+        .taken { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; font-size: 8px; border: none; font-weight: 400; }
+        .selected { background: #ffd700 !important; color: #000; border: 2px solid #000; transform: scale(1.1); z-index: 10; }
+        
+        /* Floating Checkout */
+        .checkout-bar { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 15px 30px; border-radius: 50px; display: flex; gap: 25px; align-items: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4); z-index: 100; display: none; border: 1px solid rgba(255,255,255,0.1); }
+        .btn-confirm { background: var(--pfc-green); color: white; border: none; padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .btn-confirm:hover { background: var(--pfc-dark); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1 style="color: var(--pfc-green); margin:0;">PICKERING FC</h1>
-    <div style="font-weight: bold;">2009 BOYS FUNDRAISER • $20/SQUARE</div>
+    <header>
+        <h1>PICKERING FC</h1>
+        <div class="subtitle">2009 Boys Super Bowl Fundraiser • $20/Square</div>
+    </header>
     
-    <div class="progress-container">
-        <div id="myBar" class="progress-bar"></div>
-        <div id="progressText" class="progress-text">Loading Progress...</div>
+    <div class="prog-wrapper">
+        <div class="prog-label">
+            <span>Fundraising Progress</span>
+            <span id="prog-val">0%</span>
+        </div>
+        <div class="progress-container">
+            <div id="myBar" class="progress-bar"></div>
+        </div>
     </div>
 
-    <div id="status" style="margin:10px; font-weight:bold; color: var(--pfc-green);">📡 Syncing Board...</div>
+    <div id="status" style="font-size: 12px; margin-bottom: 10px; color: #64748b;">📡 Connecting to Sheet...</div>
     <div id="game-board" class="grid"></div>
 </div>
 
 <div id="checkout" class="checkout-bar">
-    <div>Squares: <span id="count">0</span></div>
-    <div>Total: <b id="total">$0</b></div>
-    <button class="btn-confirm" onclick="checkout()">Confirm & Save</button>
+    <div style="font-size: 14px;">Selected: <b id="count">0</b></div>
+    <div style="font-size: 14px;">Total: <b id="total" style="color: #fbbf24;">$0</b></div>
+    <button class="btn-confirm" onclick="checkout()">Reserve Now</button>
 </div>
 
 <script>
@@ -58,10 +80,9 @@
             takenSquares = {};
             sheetData.forEach(row => { if(row[0]) takenSquares[row[0].toString()] = row[1]; });
             updateProgress(Object.keys(takenSquares).length);
-            document.getElementById('status').innerText = "✅ Board Live";
+            document.getElementById('status').innerHTML = "🟢 Board Live";
         } catch (e) {
-            document.getElementById('status').innerText = "⚠️ Offline Mode";
-            updateProgress(0);
+            document.getElementById('status').innerText = "⚠️ Connection Error";
         }
         renderBoard();
     }
@@ -69,7 +90,7 @@
     function updateProgress(soldCount) {
         const percent = Math.min((soldCount / 100) * 100, 100);
         document.getElementById('myBar').style.width = percent + "%";
-        document.getElementById('progressText').innerText = soldCount + " / 100 Squares Sold";
+        document.getElementById('prog-val').innerText = soldCount + " / 100 Sold";
     }
 
     function renderBoard() {
@@ -116,8 +137,8 @@
         if (!name || !email) return;
 
         const totalAmount = selectedSquares.length * 20;
-        if (confirm(`Confirm $${totalAmount} for ${selectedSquares.length} squares?\n\nPlease e-Transfer to PFCBOYS09@GMAIL.COM after clicking OK.`)) {
-            document.getElementById('status').innerText = "⌛ Saving... Please stay on this page.";
+        if (confirm(`Confirm $${totalAmount} for ${selectedSquares.length} squares?`)) {
+            document.getElementById('status').innerText = "⌛ Securing Squares...";
             for (let id of selectedSquares) {
                 await fetch(SCRIPT_URL, {
                     method: "POST",
@@ -125,7 +146,7 @@
                     body: JSON.stringify({ squareId: id, name: name, email: email })
                 });
             }
-            alert(`Success! Squares reserved. Send $${totalAmount} to PFCBOYS09@GMAIL.COM`);
+            alert(`SUCCESS! We've held your squares.\n\nPlease e-Transfer $${totalAmount} to PFCBOYS09@GMAIL.COM to finalize.`);
             selectedSquares = [];
             updateBar();
             loadBoard();
