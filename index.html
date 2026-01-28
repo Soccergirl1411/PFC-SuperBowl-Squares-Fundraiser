@@ -2,225 +2,217 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PFC 2009 Boys | Super Bowl LX Fundraiser</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFC 2009 Boys - Superbowl Squares</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root {
-            --pfc-green: #00843D;
-            --sb-gradient: linear-gradient(135deg, #6e2da8 0%, #b02e91 50%, #e3a61b 100%);
-            --pats-navy: #002244; --pats-red: #C60C30;
-            --hawks-green: #69BE28; --hawks-navy: #002244;
-            --bg: #f8fafc;
-        }
-
-        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); margin: 0; color: #1e293b; text-align: center; overflow-x: hidden; }
-        .container { max-width: 1100px; margin: 10px auto; padding: 0 10px; }
-
-        /* Modern UI Header */
-        .header-card { background: white; padding: 1rem; border-radius: 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
-        .sb-title { background: var(--sb-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: -1px; }
-        .pfc-label { color: var(--pfc-green); font-weight: 700; letter-spacing: 2px; font-size: 1rem; margin-top: 5px; }
-
-        /* The Football Arena Wrapper - Handles Mobile Scrolling */
-        .arena-scroll-container {
-            width: 100%;
-            overflow-x: auto; /* This allows side-scrolling on mobile */
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 20px;
-            display: flex;
-            justify-content: flex-start; /* Keeps grid left-aligned so user can see side labels */
-        }
-
-        .arena { 
-            background: white; 
-            padding: 15px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
-            display: inline-block; 
-            position: relative;
-            margin: 0 auto;
-        }
-
-        .team-top { background: var(--pats-navy); color: white; padding: 8px; font-weight: 700; border-radius: 8px 8px 0 0; border-bottom: 4px solid var(--pats-red); margin-left: 44px; font-size: 0.8rem; letter-spacing: 1px; }
-        .side-content { display: flex; }
-        .team-side { background: var(--hawks-navy); color: white; writing-mode: vertical-rl; transform: rotate(180deg); padding: 8px; font-weight: 700; border-radius: 0 8px 8px 0; border-right: 4px solid var(--hawks-green); font-size: 0.8rem; letter-spacing: 1px; }
-
-        /* The Grid - Responsive Squares */
-        .grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; padding: 5px; background: #f1f5f9; }
-        
-        /* Desktop Size */
-        .sq { width: 65px; height: 65px; background: white; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; border-radius: 6px; cursor: pointer; border: 1px solid #e2e8f0; transition: 0.15s; overflow: hidden; padding: 4px; text-align: center; line-height: 1.1; box-sizing: border-box; }
-        
-        .sq:hover:not(.taken) { border-color: var(--pfc-green); background: #f0fff4; transform: scale(1.05); z-index: 10; }
-        
-        .head-sq { background: #0f172a; color: white; cursor: default; font-size: 12px; }
-        .num-sq { background: #f8fafc; color: #0f172a; font-size: 20px; font-weight: 800; cursor: default; }
-        .taken { background: #e8f5e9; color: var(--pfc-green); border-color: #c8e6c9; cursor: not-allowed; font-weight: 700; }
-        .selected { background: var(--pfc-green) !important; color: white !important; border-color: #004d23 !important; }
-
-        /* Checkout Form Pill */
-        #selection-form { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: white; padding: 15px; border-radius: 30px; 
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3); display: none; border: 2px solid var(--pfc-green); 
-            z-index: 1000; align-items: center; gap: 10px; width: auto; max-width: 90%;
+        :root { 
+            --nfl-navy: #013369; --nfl-silver: #D0D6D4; --nfl-dark: #0f172a;
+            --pats-blue: #0C2340; --pats-red: #C8102E;
+            --hawks-navy: #002244; --hawks-green: #69BE28;
+            --selection-yellow: #fbbf24;
         }
         
-        input { padding: 10px 15px; border-radius: 20px; border: 1px solid #ddd; outline: none; width: 140px; font-size: 0.9rem; }
-        .btn-submit { background: var(--pfc-green); color: white; padding: 10px 20px; border-radius: 20px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; white-space: nowrap; }
-        
-        /* Loading Overlay */
-        .loading-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:2000; justify-content:center; align-items:center; flex-direction: column; font-weight:bold; color:var(--pfc-green); }
-
-        /* Mobile Breakpoint Adjustments */
-        @media (max-width: 600px) { 
-            .sb-title { font-size: 1.5rem; }
-            .sq { width: 50px; height: 50px; font-size: 8px; } 
-            .num-sq { font-size: 16px; } 
-            #selection-form { flex-direction: column; border-radius: 20px; width: 85%; }
-            input { width: 100%; box-sizing: border-box; }
-            .btn-submit { width: 100%; }
+        body { 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            background: #f1f5f9; margin: 0; padding: 0 0 180px 0; color: #1e293b;
+            overflow-x: hidden;
         }
+
+        .hero-section {
+            background: linear-gradient(180deg, var(--nfl-dark) 0%, var(--nfl-navy) 100%);
+            color: white; padding: 30px 15px; text-align: center; border-bottom: 8px solid var(--nfl-silver);
+        }
+        .nfl-header { font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; margin: 0; text-transform: uppercase; color: white; }
+        .sub-header { font-size: clamp(1rem, 3vw, 1.4rem); font-weight: 800; color: var(--hawks-green); margin-top: 10px; }
+
+        .container { max-width: 1000px; margin: -20px auto 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 95%; box-sizing: border-box; }
+
+        .thanks-box { border-left: 5px solid var(--hawks-green); background: #f0fdf4; padding: 15px; margin-bottom: 20px; border-radius: 0 12px 12px 0; }
+
+        .rules-bar { background: #f8fafc; padding: 20px; border-radius: 12px; border: 2px solid var(--nfl-silver); margin-bottom: 30px; }
+        .rules-bar h3 { margin: 0 0 15px 0; color: var(--nfl-navy); border-bottom: 3px solid var(--hawks-green); display: inline-block; }
+        
+        .instruction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .rule-step h4 { margin: 0; color: var(--pats-blue); text-transform: uppercase; font-size: 14px; }
+        .rule-step p { margin: 5px 0; font-size: 14px; color: #475569; }
+
+        .example-box { background: var(--nfl-dark); color: white; padding: 15px; border-radius: 12px; border-left: 6px solid var(--hawks-green); font-size: 13px; }
+        .digit-highlight { color: #fbbf24; font-weight: 900; text-decoration: underline; }
+
+        .zoom-controls { text-align: center; margin-bottom: 15px; display: none; }
+        @media (max-width: 768px) { .zoom-controls { display: block; } }
+        .zoom-btn { background: var(--nfl-navy); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        .game-container { display: flex; flex-direction: column; align-items: center; width: 100%; overflow-x: auto; transition: transform 0.3s ease; }
+        .zoomed { transform: scale(1.3); transform-origin: top center; margin-bottom: 100px; }
+
+        .hawks-banner { width: 100%; max-width: 600px; margin-left: 44px; background: var(--hawks-navy); color: var(--hawks-green); font-size: clamp(16px, 4vw, 24px); font-weight: 900; padding: 10px 0; text-align: center; border-radius: 10px 10px 0 0; border-bottom: 4px solid var(--hawks-green); letter-spacing: 2px; }
+        .main-row { display: flex; align-items: stretch; justify-content: center; }
+        .pats-banner { writing-mode: vertical-rl; transform: rotate(180deg); background: var(--pats-blue); color: white; padding: 10px 5px; font-size: clamp(16px, 4vw, 24px); font-weight: 900; text-align: center; border-radius: 0 10px 10px 0; border-right: 4px solid var(--pats-red); letter-spacing: 2px; }
+
+        .grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; background: #cbd5e1; padding: 4px; width: 90vw; max-width: 600px; }
+        .sq { aspect-ratio: 1; background: white; display: flex; align-items: center; justify-content: center; font-size: clamp(8px, 2.2vw, 11px); font-weight: 900; cursor: pointer; }
+        .axis-sq { font-size: clamp(14px, 4vw, 24px) !important; cursor: default; }
+        .hawks-axis-num { color: var(--hawks-green); }
+        .pats-axis-num { color: var(--pats-red); }
+
+        .taken { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+        .selected { background: var(--selection-yellow) !important; color: black !important; box-shadow: inset 0 0 0 2px var(--nfl-navy); }
+
+        #checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nfl-dark); color: white; padding: 20px 10px; text-align: center; z-index: 1000; display: none; border-top: 4px solid var(--nfl-silver); }
+        .checkout-inputs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .checkout-inputs input { padding: 12px; border-radius: 5px; border: none; width: 100%; max-width: 250px; }
+        .btn-confirm { background: white; color: black; padding: 12px 30px; border-radius: 8px; font-weight: 900; border-left: 8px solid var(--hawks-green); border-right: 8px solid var(--pats-red); cursor: pointer; }
+
+        @media (max-width: 600px) { .container { padding: 10px; } .hawks-banner { margin-left: 30px; } }
     </style>
 </head>
 <body>
 
-<div id="loader" class="loading-overlay">
-    <div style="font-size: 2.5rem; margin-bottom: 10px;">⚽</div>
-    <span>Syncing with PFC Sheet...</span>
+<div class="hero-section">
+    <h1 class="nfl-header">Superbowl Squares</h1>
+    <div class="sub-header">PFC 2009 BOYS FUNDRAISER</div>
 </div>
 
 <div class="container">
-    <div class="header-card">
-        <h1 class="sb-title">Super Bowl Squares</h1>
-        <div class="pfc-label">PFC 2009 BOYS</div>
-        <p style="color: #64748b; font-size: 0.85rem; margin-top:10px; line-height: 1.4;">
-            <b>$20 per square</b><br>e-Transfer: <b>PFCBOYS09@GMAIL.COM</b>
-        </p>
+    <div class="thanks-box">
+        <h4 style="margin:0; color: #166534;">⚽ SUPPORTING THE TEAM</h4>
+        <p style="margin:5px 0 0 0; font-size: 14px;">Thank you for supporting the <b>PFC 2009 BOYS SOCCER TEAM</b>. All proceeds go directly to the team!</p>
     </div>
 
-    <div class="arena-scroll-container">
-        <div class="arena">
-            <div class="team-top">NEW ENGLAND PATRIOTS (AFC)</div>
-            <div class="side-content">
-                <div class="team-side">SEATTLE SEAHAWKS (NFC)</div>
-                <div id="game-board" class="grid"></div>
+    <div class="rules-bar">
+        <h3>📋 OFFICIAL RULES</h3>
+        <div class="instruction-grid">
+            <div class="rule-step">
+                <h4>1. Reserve & Pay</h4>
+                <p>Squares: $20. E-Transfer: <b>PFCBOYS09@GMAIL.COM</b></p>
+                <h4>2. Payouts</h4>
+                <p>50% pool awarded (Max $250) for Q1, Q2, Q3, and Final.</p>
+            </div>
+            <div class="example-box">
+                <b style="color:var(--hawks-green)">🎯 HOW TO WIN:</b><br>
+                Example: Patriots 1<span class="digit-highlight">1</span> — Seahawks 1<span class="digit-highlight">3</span><br>
+                Winner is the square where <b class="digit-highlight">1</b> (Pats) and <b class="digit-highlight">3</b> (Hawks) meet.
             </div>
         </div>
     </div>
 
-    <div id="selection-form">
-        <span id="count-label" style="font-weight:800; color:var(--pfc-green);">0 Selected</span>
-        <input type="text" id="parent-name" placeholder="Full Name">
-        <input type="email" id="parent-email" placeholder="Email Address">
-        <button class="btn-submit" onclick="submitSelection()">Check Out</button>
+    <div class="zoom-controls">
+        <button class="zoom-btn" onclick="toggleZoom()">🔍 Tap to Zoom Grid</button>
     </div>
 
-    <div style="margin-top: 50px; padding-bottom: 50px;">
-        <button onclick="adminMenu()" style="opacity:0.03; background:none; border:none; cursor:pointer;">Admin</button>
+    <div id="game-container" class="game-container">
+        <div class="hawks-banner">SEAHAWKS</div>
+        <div class="main-row">
+            <div class="pats-banner">PATRIOTS</div>
+            <div id="game-board" class="grid"></div>
+        </div>
     </div>
+</div>
+
+<div id="checkout-bar">
+    <div style="margin-bottom:10px; font-size:18px;">Selected: <b id="count">0</b> | Total: <b id="total-val" style="color:var(--hawks-green)">$0</b></div>
+    <div class="checkout-inputs">
+        <input type="text" id="userName" placeholder="Full Name">
+        <input type="email" id="userEmail" placeholder="Email Address">
+    </div>
+    <button class="btn-confirm" id="confirmBtn" onclick="submitBooking()">CONFIRM & RESERVE</button>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHUIWFce4Xb1HI3nW1toacZiEI4HK6nfsph5oZovGslcdhkOZMaVj_vcT8rPGrE6qd/exec";
     let selectedSquares = [];
+    let takenSquares = {};
+    let seahawksNumbers = Array(10).fill("?");
+    let patsNumbers = Array(10).fill("?");
+    let adminClickCount = 0;
+
+    function toggleZoom() { document.getElementById('game-container').classList.toggle('zoomed'); }
+
+    function renderBoard() {
+        const board = document.getElementById('game-board');
+        board.innerHTML = "";
+        let squareTracker = 1;
+        for (let row = 0; row < 11; row++) {
+            for (let col = 0; col < 11; col++) {
+                const d = document.createElement('div');
+                d.className = 'sq';
+                if (row === 0 && col === 0) { 
+                    d.innerText = "2026"; d.style.background="#000"; d.style.color="#fff";
+                    d.onclick = () => { adminClickCount++; if(adminClickCount === 5) adminTool(); };
+                }
+                else if (row === 0) { 
+                    const val = seahawksNumbers[col-1];
+                    d.innerHTML = val === "?" ? "?" : `<b class="hawks-axis-num">${val}</b>`;
+                    d.classList.add('axis-sq');
+                }
+                else if (col === 0) { 
+                    const val = patsNumbers[row-1];
+                    d.innerHTML = val === "?" ? "?" : `<b class="pats-axis-num">${val}</b>`;
+                    d.classList.add('axis-sq');
+                }
+                else {
+                    let id = squareTracker.toString(); squareTracker++;
+                    if (takenSquares[id]) { d.innerText = takenSquares[id]; d.classList.add('taken'); }
+                    else {
+                        d.onclick = () => toggleSquare(id, d);
+                        if (selectedSquares.includes(id)) d.classList.add('selected');
+                    }
+                }
+                board.appendChild(d);
+            }
+        }
+    }
+
+    async function adminTool() {
+        const pass = prompt("Admin Password:");
+        if (pass !== "PFCadmin2009!") return;
+        const type = prompt("Type 'SHUFFLE' to randomize numbers.");
+        if (type === 'SHUFFLE') {
+            const sNums = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+            const pNums = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+            await fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ admin: true, action: "SHUFFLE", seahawks: sNums, pats: pNums }) });
+            location.reload();
+        }
+    }
 
     async function loadBoard() {
         try {
-            const response = await fetch(SCRIPT_URL + "?cb=" + Date.now());
-            const sheetData = await response.json();
-            renderBoard(sheetData);
-        } catch (e) { 
-            setTimeout(loadBoard, 2500); 
-        }
+            const res = await fetch(SCRIPT_URL);
+            const data = await res.json();
+            data.forEach(row => { 
+                if(row[0] === "SEAHAWKS_NUMS") seahawksNumbers = JSON.parse(row[1]);
+                else if(row[0] === "PATS_NUMS") patsNumbers = JSON.parse(row[1]);
+                else if(row[0] && row[1]) takenSquares[row[0].toString()] = row[1];
+            });
+            renderBoard();
+        } catch (e) { console.error(e); }
     }
 
-    function renderBoard(sheetData) {
-        const board = document.getElementById('game-board');
-        board.innerHTML = "";
-        let taken = {};
-        sheetData.forEach(row => { if(row[0]) taken[row[0]] = row[1]; });
-
-        for (let i = 0; i < 121; i++) {
-            const d = document.createElement('div');
-            d.className = 'sq';
-            if (i === 0) { d.innerHTML = "🏈"; d.classList.add('head-sq'); }
-            else if (i < 11 || i % 11 === 0) { 
-                const savedNum = localStorage.getItem('axis-' + i);
-                d.innerText = savedNum ? savedNum : "?";
-                d.classList.add('num-sq'); 
-                d.id = `axis-${i}`; 
-            }
-            else {
-                if (taken[i]) { 
-                    d.innerText = taken[i]; d.classList.add('taken'); 
-                } else { 
-                    d.onclick = () => toggleSquare(i, d); 
-                }
-            }
-            board.appendChild(d);
-        }
-        document.getElementById('loader').style.display = 'none';
-    }
-
-    function toggleSquare(id, element) {
+    function toggleSquare(id, el) {
         if (selectedSquares.includes(id)) {
             selectedSquares = selectedSquares.filter(s => s !== id);
-            element.classList.remove('selected');
+            el.classList.remove('selected');
         } else {
             selectedSquares.push(id);
-            element.classList.add('selected');
+            el.classList.add('selected');
         }
-        const form = document.getElementById('selection-form');
-        form.style.display = selectedSquares.length > 0 ? 'flex' : 'none';
-        document.getElementById('count-label').innerText = `${selectedSquares.length} Selected`;
+        document.getElementById('count').innerText = selectedSquares.length;
+        document.getElementById('total-val').innerText = "$" + (selectedSquares.length * 20);
+        document.getElementById('checkout-bar').style.display = selectedSquares.length > 0 ? 'block' : 'none';
     }
 
-    async function submitSelection() {
-        const name = document.getElementById('parent-name').value.trim();
-        const email = document.getElementById('parent-email').value.trim();
-        if (!name || !email) return alert("Please enter name and email.");
-
-        document.getElementById('loader').style.display = 'flex';
-        document.getElementById('loader').querySelector('span').innerText = "Registering Squares...";
-        document.getElementById('selection-form').style.display = 'none';
-
+    async function submitBooking() {
+        const name = document.getElementById('userName').value.trim();
+        const email = document.getElementById('userEmail').value.trim();
+        if (!name || !email) return alert("Enter name and email.");
+        document.getElementById('confirmBtn').disabled = true;
         for (let id of selectedSquares) {
-            try {
-                await fetch(SCRIPT_URL, { 
-                    method: "POST", 
-                    mode: "no-cors", 
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({ squareId: id, name: name, email: email }) 
-                });
-            } catch (e) { console.error(e); }
+            await fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ squareId: id, name: name, email: email }) });
         }
-        
-        const total = selectedSquares.length * 20;
-        selectedSquares = [];
-        document.getElementById('parent-name').value = "";
-        document.getElementById('parent-email').value = "";
-        
-        setTimeout(() => {
-            loadBoard();
-            alert("Squares Reserved!\n\nPlease e-transfer $" + total + " to PFCBOYS09@GMAIL.COM");
-        }, 2000);
-    }
-
-    function adminMenu() {
-        const pin = prompt("Admin PIN:");
-        if (pin !== "Soccer2009") return;
-        const action = (prompt("Type 'DRAW' or 'RESET':") || "").toUpperCase();
-        if (action === "DRAW") {
-            const r1 = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
-            const r2 = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
-            for (let i = 1; i < 11; i++) localStorage.setItem(`axis-${i}`, r1[i-1]);
-            for (let i = 1; i < 11; i++) localStorage.setItem(`axis-${i*11}`, r2[i-1]);
-            loadBoard();
-        } else if (action === "RESET") {
-            for (let i = 0; i < 121; i++) localStorage.removeItem(`axis-${i}`);
-            loadBoard();
-        }
+        alert("Reserved! Please send E-Transfer to PFCBOYS09@GMAIL.COM.");
+        location.reload();
     }
 
     loadBoard();
