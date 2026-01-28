@@ -48,7 +48,6 @@
         .pot-card { text-align: center; flex: 1; }
         .pot-card span { font-size: 32px; font-weight: 900; color: var(--pats-blue); }
 
-        /* EQUAL SIZE HEADERS */
         .game-wrapper { display: flex; flex-direction: column; align-items: center; margin-top: 20px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15)); }
         .hawks-banner { width: 90%; margin-left: 10%; background: var(--hawks-navy); color: var(--hawks-green); font-weight: 900; padding: 15px 0; text-align: center; border-radius: 8px 8px 0 0; border-bottom: 4px solid var(--hawks-green); font-size: clamp(14px, 2.5vw, 20px); letter-spacing: 1px; }
         .main-row { display: flex; width: 100%; justify-content: center; align-items: stretch; }
@@ -86,12 +85,18 @@
     <div class="info-grid">
         <div class="info-card">
             <h4>💰 RESERVE & PAY</h4>
-            <p><b>$20.00 Per Square.</b><br>1. Click a square & fill out info <b>OR</b><br>2. Send E-Transfer & include square # in the message box.</p>
+            <p><b>$20.00 Per Square.</b><br><br>
+            1. Click the square and add the information then pay via e-transfer<br>
+            <b>OR</b><br>
+            2. In message box of your e-transfer please indicate the square.<br><br>
+            <b>Payment confirms your reservation about the square.</b></p>
             <span class="etransfer-highlight">PFCBOYS09@GMAIL.COM</span>
         </div>
         <div class="info-card">
-            <h4>🏈 THE GAME BOARD</h4>
-            <p>The Axes numbers <b>(?)</b> are randomly drawn 0-9 at kickoff.</p>
+            <h4 style="color: var(--pats-red);">🏟️ THE GAME BOARD</h4>
+            <p><b>The game board</b> includes 100 squares for players to select.</p>
+            <br><br>
+            <p><b>The Question Marks (?)</b> are row and column identifiers; these will be randomly assigned 0-9 before kickoff to determine the winner at each quarter and the final score.</p>
         </div>
         <div class="info-card">
             <h4>🏆 PRIZE POOL</h4>
@@ -100,14 +105,14 @@
     </div>
 
     <div class="how-to-win-navy">
-        <h4>🏈 HOW TO WIN</h4>
-        <p>We use the last digit of each team's score at the end of each quarter and the final score.</p>
+        <h4>🏅 HOW TO WIN</h4>
+        <p><b>Last digit of the score for each team</b> — At the end of each quarter, we match the <b>Last Digit</b> of each team's score to the grid. Where they intersect is the winning square.</p>
         <ul class="axis-list">
-            <li><b>Rows Axis:</b> Your number for the New England Patriots.</li>
-            <li><b>Columns Axis:</b> Your number for the Seattle Seahawks.</li>
+            <li><b>Row Number:</b> The Last Digit of the New England Patriots score.</li>
+            <li><b>Column Number:</b> The Last Digit of the Seattle Seahawks score.</li>
         </ul>
         <div style="font-size: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-weight: 600; color: #cbd5e1;">
-            <b>EXAMPLE:</b> If the score is New England Patriots 1<span class="digit-highlight">4</span> and Seattle Seahawks 2<span class="digit-highlight">7</span>, the winning square is Row <span class="digit-highlight">4</span> and Column <span class="digit-highlight">7</span>.
+            <b>EXAMPLE:</b> If the score is New England Patriots 1<span class="digit-highlight">7</span> and Seattle Seahawks 1<span class="digit-highlight">4</span>, the winner is where <span class="digit-highlight">Row 7 and Column 4 intersect on the grid</span>.
         </div>
     </div>
 
@@ -122,9 +127,9 @@
     </div>
 
     <div class="game-wrapper">
-        <div class="hawks-banner">SEATTLE SEAHAWKS</div>
+        <div class="hawks-banner">SEATTLE SEAHAWKS (COLUMNS)</div>
         <div class="main-row">
-            <div class="pats-banner">NEW ENGLAND PATRIOTS</div>
+            <div class="pats-banner">NEW ENGLAND PATRIOTS (ROWS)</div>
             <div id="game-board" class="grid"></div>
         </div>
     </div>
