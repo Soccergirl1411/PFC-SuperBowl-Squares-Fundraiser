@@ -2,195 +2,228 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PFC 2009 Boys - Superbowl Squares</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { 
-            --nfl-navy: #013369; --nfl-silver: #D0D6D4; --nfl-dark: #0f172a;
-            --pats-blue: #0C2340; --pats-red: #C8102E;
+            --pats-blue: #002244; --pats-red: #C60C30; --pats-silver: #B0B7BC;
             --hawks-navy: #002244; --hawks-green: #69BE28;
-            --selection-yellow: #fbbf24;
+            --nfl-dark: #010101; --selection-yellow: #FFB81C;
+            --stadium-dark: #0f172a;
         }
         
-        body { 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            background: #f1f5f9; margin: 0; padding: 0 0 180px 0; color: #1e293b;
-            overflow-x: hidden;
-        }
-
-        .hero-section {
-            background: linear-gradient(180deg, var(--nfl-dark) 0%, var(--nfl-navy) 100%);
-            color: white; padding: 30px 15px; text-align: center; border-bottom: 8px solid var(--nfl-silver);
-        }
-        .nfl-header { font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; margin: 0; text-transform: uppercase; color: white; }
-        .sub-header { font-size: clamp(1rem, 3vw, 1.4rem); font-weight: 800; color: var(--hawks-green); margin-top: 10px; }
-
-        .container { max-width: 1000px; margin: -20px auto 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 95%; box-sizing: border-box; }
-
-        .thanks-box { border-left: 5px solid var(--hawks-green); background: #f0fdf4; padding: 15px; margin-bottom: 20px; border-radius: 0 12px 12px 0; }
-
-        .rules-bar { background: #f8fafc; padding: 20px; border-radius: 12px; border: 2px solid var(--nfl-silver); margin-bottom: 30px; }
-        .rules-bar h3 { margin: 0 0 15px 0; color: var(--nfl-navy); border-bottom: 3px solid var(--hawks-green); display: inline-block; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--stadium-dark); margin: 0; padding: 0 0 250px 0; color: #f8fafc; text-align: center; }
         
-        .instruction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .rule-step h4 { margin: 0; color: var(--pats-blue); text-transform: uppercase; font-size: 14px; }
-        .rule-step p { margin: 5px 0; font-size: 14px; color: #475569; }
+        .hero-section { 
+            background: radial-gradient(circle at center, #1e293b 0%, #010101 100%); 
+            color: white; padding: 45px 15px; border-bottom: 5px solid var(--hawks-green); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .team-brand { font-weight: 900; color: var(--hawks-green); letter-spacing: 3px; font-size: 26px; text-transform: uppercase; margin-bottom: 5px; }
+        .hero-section h1 { font-size: clamp(2.2rem, 8vw, 3.8rem); margin: 5px 0; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
 
-        .example-box { background: var(--nfl-dark); color: white; padding: 15px; border-radius: 12px; border-left: 6px solid var(--hawks-green); font-size: 13px; }
-        .digit-highlight { color: #fbbf24; font-weight: 900; text-decoration: underline; }
+        .container { 
+            max-width: 1100px; margin: -30px auto 0 auto; width: 95%; background: white; padding: 30px; 
+            border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); text-align: left; box-sizing: border-box; color: #1e293b; 
+        }
 
-        .zoom-controls { text-align: center; margin-bottom: 15px; display: none; }
-        @media (max-width: 768px) { .zoom-controls { display: block; } }
-        .zoom-btn { background: var(--nfl-navy); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        @media (max-width: 850px) { .info-grid { grid-template-columns: 1fr; } }
+        
+        .info-card { background: #f8fafc; padding: 20px; border-radius: 12px; border-top: 4px solid var(--pats-blue); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .info-card h4 { margin: 0 0 10px 0; font-size: 14px; letter-spacing: 1px; color: var(--pats-red); text-transform: uppercase; }
+        .info-card p { margin: 0; font-size: 13px; line-height: 1.5; font-weight: 500; }
+        .etransfer-highlight { display: block; margin-top: 8px; font-weight: 800; color: var(--hawks-navy); background: #e2e8f0; padding: 5px; border-radius: 4px; text-align: center; font-size: 13px; }
 
-        .game-container { display: flex; flex-direction: column; align-items: center; width: 100%; overflow-x: auto; transition: transform 0.3s ease; }
-        .zoomed { transform: scale(1.3); transform-origin: top center; margin-bottom: 100px; }
+        .how-to-win-navy { background: var(--hawks-navy); color: white; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 8px solid var(--hawks-green); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .how-to-win-navy h4 { margin: 0 0 15px 0; color: var(--hawks-green); font-size: 22px; text-transform: uppercase; }
+        .how-to-win-navy p { font-size: 16px; line-height: 1.6; margin: 0 0 10px 0; }
+        .axis-list { list-style: none; padding: 0; margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;}
+        .axis-list li { margin-bottom: 8px; font-weight: 600; font-size: 16px; }
+        .digit-highlight { color: var(--selection-yellow); font-size: 20px; text-decoration: underline; font-weight: 900; }
 
-        .hawks-banner { width: 100%; max-width: 600px; margin-left: 44px; background: var(--hawks-navy); color: var(--hawks-green); font-size: clamp(16px, 4vw, 24px); font-weight: 900; padding: 10px 0; text-align: center; border-radius: 10px 10px 0 0; border-bottom: 4px solid var(--hawks-green); letter-spacing: 2px; }
-        .main-row { display: flex; align-items: stretch; justify-content: center; }
-        .pats-banner { writing-mode: vertical-rl; transform: rotate(180deg); background: var(--pats-blue); color: white; padding: 10px 5px; font-size: clamp(16px, 4vw, 24px); font-weight: 900; text-align: center; border-radius: 0 10px 10px 0; border-right: 4px solid var(--pats-red); letter-spacing: 2px; }
+        .second-chance-bar { background: #fffbeb; border: 2px dashed var(--selection-yellow); color: #92400e; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; margin-bottom: 25px; text-align: center; }
 
-        .grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; background: #cbd5e1; padding: 4px; width: 90vw; max-width: 600px; }
-        .sq { aspect-ratio: 1; background: white; display: flex; align-items: center; justify-content: center; font-size: clamp(8px, 2.2vw, 11px); font-weight: 900; cursor: pointer; }
-        .axis-sq { font-size: clamp(14px, 4vw, 24px) !important; cursor: default; }
-        .hawks-axis-num { color: var(--hawks-green); }
-        .pats-axis-num { color: var(--pats-red); }
+        .pot-tracker { display: flex; justify-content: space-around; gap: 15px; margin: 25px 0 35px 0; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 20px 0; }
+        .pot-card { text-align: center; flex: 1; }
+        .pot-card span { font-size: 32px; font-weight: 900; color: var(--pats-blue); }
 
-        .taken { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
-        .selected { background: var(--selection-yellow) !important; color: black !important; box-shadow: inset 0 0 0 2px var(--nfl-navy); }
+        /* EQUAL SIZE HEADERS */
+        .game-wrapper { display: flex; flex-direction: column; align-items: center; margin-top: 20px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15)); }
+        .hawks-banner { width: 90%; margin-left: 10%; background: var(--hawks-navy); color: var(--hawks-green); font-weight: 900; padding: 15px 0; text-align: center; border-radius: 8px 8px 0 0; border-bottom: 4px solid var(--hawks-green); font-size: clamp(14px, 2.5vw, 20px); letter-spacing: 1px; }
+        .main-row { display: flex; width: 100%; justify-content: center; align-items: stretch; }
+        .pats-banner { writing-mode: vertical-rl; transform: rotate(180deg); background: var(--pats-blue); color: white; width: 10%; display: flex; align-items: center; justify-content: center; font-weight: 900; text-align: center; border-radius: 8px 0 0 8px; border-right: 4px solid var(--pats-red); font-size: clamp(14px, 2.5vw, 20px); letter-spacing: 1px; }
+        
+        .grid { display: grid; grid-template-columns: repeat(11, 1fr); gap: 2px; background: #cbd5e1; width: 90%; padding: 4px; border-radius: 0 0 8px 0; box-sizing: border-box; }
+        .sq { aspect-ratio: 1; background: white; display: flex; align-items: center; justify-content: center; font-size: clamp(10px, 2.2vw, 17px); font-weight: 800; cursor: pointer; }
+        .axis-sq { background: #f8fafc; color: var(--pats-blue); font-weight: 900; cursor: default; font-size: clamp(16px, 3.5vw, 26px); }
 
-        #checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nfl-dark); color: white; padding: 20px 10px; text-align: center; z-index: 1000; display: none; border-top: 4px solid var(--nfl-silver); }
-        .checkout-inputs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 10px; }
-        .checkout-inputs input { padding: 12px; border-radius: 5px; border: none; width: 100%; max-width: 250px; }
-        .btn-confirm { background: white; color: black; padding: 12px 30px; border-radius: 8px; font-weight: 900; border-left: 8px solid var(--hawks-green); border-right: 8px solid var(--pats-red); cursor: pointer; }
+        .taken { background: #f1f5f9; color: #64748b; cursor: not-allowed; position: relative; overflow: hidden; }
+        .selected { background: var(--selection-yellow) !important; color: black !important; }
 
-        @media (max-width: 600px) { .container { padding: 10px; } .hawks-banner { margin-left: 30px; } }
+        .team-thanks { background: #f8fafc; padding: 20px; border-radius: 12px; margin-top: 40px; text-align: center; border-left: 5px solid var(--hawks-green); border-right: 5px solid var(--pats-red); }
+
+        #checkout-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nfl-dark); color: white; padding: 25px; text-align: center; z-index: 1000; display: none; border-top: 4px solid var(--hawks-green); }
+        .input-field { padding: 12px; margin: 5px; border-radius: 8px; border: 1px solid #334155; width: 42%; min-width: 160px; font-size: 16px; background: #fff; color: #000; }
+        .btn-confirm { background: var(--hawks-green); color: white; padding: 15px 40px; border-radius: 10px; font-weight: 900; border: none; cursor: pointer; width: 90%; max-width: 350px; margin-top: 10px; font-size: 18px; box-shadow: 0 4px 0 #4a8a1c; }
+        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; color: var(--hawks-green); font-weight: 800; font-size: 24px; }
     </style>
 </head>
 <body>
 
+<div id="loading-overlay">SYNCING BOARD...</div>
+
 <div class="hero-section">
-    <h1 class="nfl-header">Superbowl Squares</h1>
-    <div class="sub-header">PFC 2009 BOYS FUNDRAISER</div>
+    <div class="team-brand">PFC 2009 BOYS FUNDRAISER</div>
+    <h1>SUPERBOWL SQUARES</h1>
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px;">
+        <span id="sync-time" style="font-size: 12px; color: #94a3b8; font-weight: 600;">Connecting...</span>
+        <button onclick="loadBoard()" style="background: rgba(105, 190, 40, 0.1); border: 1px solid var(--hawks-green); color: var(--hawks-green); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; margin-left: 10px; font-weight: 700;">🔄 REFRESH</button>
+    </div>
 </div>
 
 <div class="container">
-    <div class="thanks-box">
-        <h4 style="margin:0; color: #166534;">⚽ SUPPORTING THE TEAM</h4>
-        <p style="margin:5px 0 0 0; font-size: 14px;">Thank you for supporting the <b>PFC 2009 BOYS SOCCER TEAM</b>. All proceeds go directly to the team!</p>
-    </div>
-
-    <div class="rules-bar">
-        <h3>📋 OFFICIAL RULES</h3>
-        <div class="instruction-grid">
-            <div class="rule-step">
-                <h4>1. Reserve & Pay</h4>
-                <p>Squares: $20. E-Transfer: <b>PFCBOYS09@GMAIL.COM</b></p>
-                <h4>2. Payouts</h4>
-                <p>50% pool awarded (Max $250) for Q1, Q2, Q3, and Final.</p>
-            </div>
-            <div class="example-box">
-                <b style="color:var(--hawks-green)">🎯 HOW TO WIN:</b><br>
-                Example: Patriots 1<span class="digit-highlight">1</span> — Seahawks 1<span class="digit-highlight">3</span><br>
-                Winner is the square where <b class="digit-highlight">1</b> (Pats) and <b class="digit-highlight">3</b> (Hawks) meet.
-            </div>
+    <div class="info-grid">
+        <div class="info-card">
+            <h4>💰 RESERVE & PAY</h4>
+            <p><b>$20.00 Per Square.</b><br>1. Click a square & fill out info <b>OR</b><br>2. Send E-Transfer & include square # in the message box.</p>
+            <span class="etransfer-highlight">PFCBOYS09@GMAIL.COM</span>
+        </div>
+        <div class="info-card">
+            <h4>🏈 THE GAME BOARD</h4>
+            <p>The Axes numbers <b>(?)</b> are randomly drawn 0-9 at kickoff.</p>
+        </div>
+        <div class="info-card">
+            <h4>🏆 PRIZE POOL</h4>
+            <p>50% to Team / 50% to Prizes. Winners: <b>Q1, Q2, Q3, & Final Score.</b></p>
         </div>
     </div>
 
-    <div class="zoom-controls">
-        <button class="zoom-btn" onclick="toggleZoom()">🔍 Tap to Zoom Grid</button>
+    <div class="how-to-win-navy">
+        <h4>🏈 HOW TO WIN</h4>
+        <p>We use the last digit of each team's score at the end of each quarter and the final score.</p>
+        <ul class="axis-list">
+            <li><b>Rows Axis:</b> Your number for the New England Patriots.</li>
+            <li><b>Columns Axis:</b> Your number for the Seattle Seahawks.</li>
+        </ul>
+        <div style="font-size: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-weight: 600; color: #cbd5e1;">
+            <b>EXAMPLE:</b> If the score is New England Patriots 1<span class="digit-highlight">4</span> and Seattle Seahawks 2<span class="digit-highlight">7</span>, the winning square is Row <span class="digit-highlight">4</span> and Column <span class="digit-highlight">7</span>.
+        </div>
     </div>
 
-    <div id="game-container" class="game-container">
-        <div class="hawks-banner">SEAHAWKS</div>
+    <div class="second-chance-bar">
+        📢 SECOND CHANCE: If a winning square is unsold, the prize is RAFFLED to all paid participants!
+    </div>
+
+    <div class="pot-tracker">
+        <div class="pot-card"><small style="display:block; font-weight:800; color:#64748b; text-transform:uppercase; font-size:12px;">Total Prize Pool</small><span id="total-pot">$0.00</span></div>
+        <div style="width: 1px; background: #e2e8f0; height: 50px; align-self: center;"></div>
+        <div class="pot-card"><small style="display:block; font-weight:800; color:#64748b; text-transform:uppercase; font-size:12px;">Payout Per Winner</small><span id="quarter-payout">$0.00</span></div>
+    </div>
+
+    <div class="game-wrapper">
+        <div class="hawks-banner">SEATTLE SEAHAWKS</div>
         <div class="main-row">
-            <div class="pats-banner">PATRIOTS</div>
+            <div class="pats-banner">NEW ENGLAND PATRIOTS</div>
             <div id="game-board" class="grid"></div>
         </div>
+    </div>
+
+    <div class="team-thanks">
+        <p><b>Thank you for supporting the PFC 2009 Boys!</b><br>Proceeds directly support team development, travel, and season costs.</p>
     </div>
 </div>
 
 <div id="checkout-bar">
-    <div style="margin-bottom:10px; font-size:18px;">Selected: <b id="count">0</b> | Total: <b id="total-val" style="color:var(--hawks-green)">$0</b></div>
-    <div class="checkout-inputs">
-        <input type="text" id="userName" placeholder="Full Name">
-        <input type="email" id="userEmail" placeholder="Email Address">
-    </div>
-    <button class="btn-confirm" id="confirmBtn" onclick="submitBooking()">CONFIRM & RESERVE</button>
+    <input type="text" id="userName" class="input-field" placeholder="Full Name (Displayed)">
+    <input type="email" id="userEmail" class="input-field" placeholder="Email Address (Private)">
+    <div style="margin-top:10px; font-weight: 700;">Selected: <span id="count" style="color:var(--selection-yellow)">0</span> | Total: <span id="checkout-total" style="color:var(--selection-yellow)">$0.00</span></div>
+    <button onclick="submitBooking()" class="btn-confirm">CONFIRM & RESERVE</button>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzHUIWFce4Xb1HI3nW1toacZiEI4HK6nfsph5oZovGslcdhkOZMaVj_vcT8rPGrE6qd/exec";
     let selectedSquares = [];
-    let takenSquares = {};
+    let takenSquares = {}; 
     let seahawksNumbers = Array(10).fill("?");
     let patsNumbers = Array(10).fill("?");
-    let adminClickCount = 0;
+    let clickCount = 0;
+    const ADMIN_PASS = "PFCadmin2009!";
 
-    function toggleZoom() { document.getElementById('game-container').classList.toggle('zoomed'); }
-
-    function renderBoard() {
-        const board = document.getElementById('game-board');
-        board.innerHTML = "";
-        let squareTracker = 1;
-        for (let row = 0; row < 11; row++) {
-            for (let col = 0; col < 11; col++) {
-                const d = document.createElement('div');
-                d.className = 'sq';
-                if (row === 0 && col === 0) { 
-                    d.innerText = "2026"; d.style.background="#000"; d.style.color="#fff";
-                    d.onclick = () => { adminClickCount++; if(adminClickCount === 5) adminTool(); };
-                }
-                else if (row === 0) { 
-                    const val = seahawksNumbers[col-1];
-                    d.innerHTML = val === "?" ? "?" : `<b class="hawks-axis-num">${val}</b>`;
-                    d.classList.add('axis-sq');
-                }
-                else if (col === 0) { 
-                    const val = patsNumbers[row-1];
-                    d.innerHTML = val === "?" ? "?" : `<b class="pats-axis-num">${val}</b>`;
-                    d.classList.add('axis-sq');
-                }
-                else {
-                    let id = squareTracker.toString(); squareTracker++;
-                    if (takenSquares[id]) { d.innerText = takenSquares[id]; d.classList.add('taken'); }
-                    else {
-                        d.onclick = () => toggleSquare(id, d);
-                        if (selectedSquares.includes(id)) d.classList.add('selected');
-                    }
-                }
-                board.appendChild(d);
-            }
-        }
-    }
-
-    async function adminTool() {
-        const pass = prompt("Admin Password:");
-        if (pass !== "PFCadmin2009!") return;
-        const type = prompt("Type 'SHUFFLE' to randomize numbers.");
-        if (type === 'SHUFFLE') {
-            const sNums = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
-            const pNums = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
-            await fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ admin: true, action: "SHUFFLE", seahawks: sNums, pats: pNums }) });
-            location.reload();
-        }
+    function formatName(str) {
+        if (!str) return "";
+        let parts = str.trim().split(" ");
+        return parts.length > 1 ? parts[0] + " " + parts[parts.length - 1].charAt(0) + "." : parts[0].substring(0, 10);
     }
 
     async function loadBoard() {
+        document.getElementById('loading-overlay').style.display = 'flex';
         try {
             const res = await fetch(SCRIPT_URL);
             const data = await res.json();
+            takenSquares = {}; 
             data.forEach(row => { 
                 if(row[0] === "SEAHAWKS_NUMS") seahawksNumbers = JSON.parse(row[1]);
                 else if(row[0] === "PATS_NUMS") patsNumbers = JSON.parse(row[1]);
                 else if(row[0] && row[1]) takenSquares[row[0].toString()] = row[1];
             });
             renderBoard();
-        } catch (e) { console.error(e); }
+            document.getElementById('sync-time').innerText = `Last Sync: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+        } finally { document.getElementById('loading-overlay').style.display = 'none'; }
     }
 
-    function toggleSquare(id, el) {
+    function renderBoard() {
+        const board = document.getElementById('game-board');
+        board.innerHTML = "";
+        const football = createSq("🏈", "axis-sq");
+        football.style.cursor = "pointer";
+        football.onclick = handleAdminClick; 
+        board.appendChild(football);
+        for (let i = 0; i < 10; i++) board.appendChild(createSq(seahawksNumbers[i], "axis-sq", 'var(--hawks-green)'));
+        let squareID = 1;
+        for (let i = 0; i < 10; i++) {
+            board.appendChild(createSq(patsNumbers[i], "axis-sq", 'var(--pats-red)'));
+            for (let j = 0; j < 10; j++) {
+                const id = squareID.toString();
+                const buyerName = takenSquares[id];
+                const d = createSq(buyerName ? formatName(buyerName) : id, buyerName ? 'taken' : '');
+                d.id = id;
+                if (!buyerName) d.onclick = () => toggleSquare(id);
+                board.appendChild(d);
+                squareID++;
+            }
+        }
+        updatePot();
+    }
+
+    function handleAdminClick() {
+        clickCount++;
+        if (clickCount === 5) {
+            clickCount = 0;
+            const pw = prompt("Enter Admin Password:");
+            if (pw === ADMIN_PASS) adminShuffle();
+        }
+    }
+
+    async function adminShuffle() {
+        if(!confirm("SHUFFLE AXIS NUMBERS?")) return;
+        const s = () => [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+        const payload = JSON.stringify({ admin: true, action: "SHUFFLE", seahawks: s(), pats: s() });
+        document.getElementById('loading-overlay').style.display = 'flex';
+        await fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: payload });
+        setTimeout(() => location.reload(), 2000);
+    }
+
+    function createSq(txt, cls, color) {
+        const d = document.createElement('div');
+        d.className = `sq ${cls}`;
+        d.innerText = txt;
+        if (color) d.style.color = color;
+        return d;
+    }
+
+    function toggleSquare(id) {
+        const el = document.getElementById(id);
         if (selectedSquares.includes(id)) {
             selectedSquares = selectedSquares.filter(s => s !== id);
             el.classList.remove('selected');
@@ -198,24 +231,39 @@
             selectedSquares.push(id);
             el.classList.add('selected');
         }
+        updatePot();
+        updateCheckout();
+    }
+
+    function updatePot() {
+        const totalSold = Object.keys(takenSquares).filter(k => !isNaN(k)).length + selectedSquares.length;
+        const totalPool = (totalSold * 20.00) * 0.50;
+        document.getElementById('total-pot').innerText = `$${totalPool.toFixed(2)}`;
+        document.getElementById('quarter-payout').innerText = `$${(totalPool / 4).toFixed(2)}`;
+    }
+
+    function updateCheckout() {
+        const bar = document.getElementById('checkout-bar');
+        bar.style.display = selectedSquares.length > 0 ? 'block' : 'none';
         document.getElementById('count').innerText = selectedSquares.length;
-        document.getElementById('total-val').innerText = "$" + (selectedSquares.length * 20);
-        document.getElementById('checkout-bar').style.display = selectedSquares.length > 0 ? 'block' : 'none';
+        document.getElementById('checkout-total').innerText = `$${(selectedSquares.length * 20.00).toFixed(2)}`;
     }
 
     async function submitBooking() {
         const name = document.getElementById('userName').value.trim();
         const email = document.getElementById('userEmail').value.trim();
-        if (!name || !email) return alert("Enter name and email.");
-        document.getElementById('confirmBtn').disabled = true;
-        for (let id of selectedSquares) {
-            await fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: JSON.stringify({ squareId: id, name: name, email: email }) });
+        if (!name || !email) return alert("Please enter name and email.");
+        document.getElementById('loading-overlay').style.display = 'flex';
+        try {
+            const payload = JSON.stringify({ squareId: selectedSquares.join(','), name: name, email: email });
+            await fetch(SCRIPT_URL, { method: "POST", mode: 'no-cors', body: payload });
+            alert("SUCCESS!\n\nPlease E-Transfer payment to: PFCBOYS09@GMAIL.COM");
+            location.reload();
+        } catch (e) {
+            document.getElementById('loading-overlay').style.display = 'none';
         }
-        alert("Reserved! Please send E-Transfer to PFCBOYS09@GMAIL.COM.");
-        location.reload();
     }
-
-    loadBoard();
+    window.onload = loadBoard;
 </script>
 </body>
 </html>
