@@ -404,7 +404,7 @@
     }
 
     function toggleSquare(id, taken) { 
-        if (gameLocked) { alert("🏈 THE GAME IS LOCKED 🏈\nKickoff has started!"); return; } 
+        if (gameLocked) { alert("🏈 THANK YOU FOR YOUR SUPPORT 🏈\n"); return; } 
         if (taken) return; 
         const el = document.getElementById(id); 
         if (selectedSquares.includes(id)) { 
@@ -481,7 +481,7 @@
             const d = Math.floor(t/86400000); const h = Math.floor((t%86400000)/3600000); 
             const m = Math.floor((t%3600000)/60000); const s = Math.floor((t%60000)/1000); 
             document.getElementById("game-countdown").innerHTML = `YOUR SQUARE. YOUR GAME. THE GAME BOARD LOCKS AT KICKOFF<br><span class="timer-highlight">${d}d ${h}h ${m}m ${s}s</span> UNTIL KICKOFF`; 
-        } else { document.getElementById("game-countdown").innerText = "🏈 GAME TIME!"; } 
+        } else { document.getElementById("game-countdown").innerText = "🏈 THANK YOU FOR YOUR SUPPORT! CONGRATULATIONS TO OUR WINNERS!"; } 
     }, 1000);
 
     function adminAuth() { 
